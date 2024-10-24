@@ -32,7 +32,8 @@ services:
     ports:
       - "15344:80"
     networks:
-      - app_network
+      shared_network:
+        external: true
 
 networks:
   app_network:
