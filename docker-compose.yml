@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:13
@@ -25,7 +27,8 @@ services:
       - app_network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
     ports:
       - "15344:80"
     networks:
@@ -33,7 +36,6 @@ services:
 
 networks:
   app_network:
-    driver: bridge
 
 volumes:
   postgres_data:
