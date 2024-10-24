@@ -1,13 +1,17 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:13
     env_file:
       - .env
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d/
     ports:
       - "5442:5432"
-    network_mode: host
+    networks:
+      - app_network
 
   backend:
     build: ./backend
@@ -19,10 +23,19 @@ services:
       - ./backend:/usr/src/app
     ports:
       - "8200:8000"
-    network_mode: host
+    networks:
+      - app_network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
     ports:
       - "15344:80"
-    network_mode: host
+    networks:
+      - app_network
+
+networks:
+  app_network:
+
+volumes:
+  postgres_data:
