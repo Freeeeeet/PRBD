@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Vehicles</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1, h2 { color: #333; }
+        .section { margin-bottom: 40px; }
+        label { display: block; margin-top: 10px; }
+        input, button { margin-top: 10px; padding: 8px; font-size: 16px; }
+        button { cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+        button:hover { background-color: #45a049; }
+        .result { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Manage Vehicles</h1>
+
+    <!-- Create Vehicle -->
+    <div class="section">
+        <h2>Create Vehicle</h2>
+        <form id="create-vehicle-form">
+            <label for="vehicle-license-plate">License Plate:</label>
+            <input type="text" id="vehicle-license-plate" required>
+            <label for="vehicle-capacity">Capacity:</label>
+            <input type="number" id="vehicle-capacity" required>
+            <label for="vehicle-driver-id">Driver ID:</label>
+            <input type="number" id="vehicle-driver-id">
+            <button type="submit">Create Vehicle</button>
+        </form>
+        <div id="vehicle-result" class="result"></div>
+    </div>
+
+    <!-- Read Vehicle -->
+    <div class="section">
+        <h2>Read Vehicle</h2>
+        <label for="read-vehicle-id">Vehicle ID:</label>
+        <input type="number" id="read-vehicle-id" required>
+        <button id="read-vehicle-btn">Read Vehicle</button>
+        <div id="read-vehicle-result" class="result"></div>
+    </div>
+
+    <!-- Update Vehicle -->
+    <div class="section">
+        <h2>Update Vehicle</h2>
+        <form id="update-vehicle-form">
+            <label for="update-vehicle-id">Vehicle ID:</label>
+            <input type="number" id="update-vehicle-id" required>
+            <label for="update-vehicle-license-plate">License Plate:</label>
+            <input type="text" id="update-vehicle-license-plate">
+            <label for="update-vehicle-capacity">Capacity:</label>
+            <input type="number" id="update-vehicle-capacity">
+            <label for="update-vehicle-driver-id">Driver ID:</label>
+            <input type="number" id="update-vehicle-driver-id">
+            <button type="submit">Update Vehicle</button>
+        </form>
+        <div id="update-vehicle-result" class="result"></div>
+    </div>
+
+    <!-- Delete Vehicle -->
+    <div class="section">
+        <h2>Delete Vehicle</h2>
+        <label for="delete-vehicle-id">Vehicle ID:</label>
+        <input type="number" id="delete-vehicle-id" required>
+        <button id="delete-vehicle-btn">Delete Vehicle</button>
+        <div id="delete-vehicle-result" class="result"></div>
+    </div>
+
+    <script src="js/vehicles.js"></script>
+</body>
+</html>

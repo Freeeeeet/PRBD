@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:13
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d/
+    ports:
+      - "5442:5432"
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - "8200:8000"
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "15344:80"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

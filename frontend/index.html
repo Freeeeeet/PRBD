@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Interaction</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1, h2 { color: #333; }
+        .section { margin-bottom: 40px; }
+        label { display: block; margin-top: 10px; }
+        input, button { margin-top: 10px; padding: 8px; font-size: 16px; }
+        button { cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+        button:hover { background-color: #45a049; }
+        .result { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>API Interaction</h1>
+
+    <!-- Section for creating a user -->
+    <div class="section">
+        <h2>Create User</h2>
+        <form id="create-user-form">
+            <label for="user-name">Name:</label>
+            <input type="text" id="user-name" name="name" required>
+            <label for="user-email">Email:</label>
+            <input type="email" id="user-email" name="email" required>
+            <button type="submit">Create User</button>
+        </form>
+        <div id="user-result" class="result"></div>
+    </div>
+
+    <!-- Section for reading a user -->
+    <div class="section">
+        <h2>Read User</h2>
+        <label for="read-user-id">User ID:</label>
+        <input type="number" id="read-user-id" required>
+        <button id="read-user-btn">Read User</button>
+        <div id="read-user-result" class="result"></div>
+    </div>
+
+    <!-- Section for creating an order -->
+    <div class="section">
+        <h2>Create Order</h2>
+        <form id="create-order-form">
+            <label for="order-price">Total Price:</label>
+            <input type="number" id="order-price" name="price" required>
+            <label for="order-user-id">User ID (optional):</label>
+            <input type="number" id="order-user-id" name="user_id">
+            <button type="submit">Create Order</button>
+        </form>
+        <div id="order-result" class="result"></div>
+    </div>
+
+    <!-- Section for reading an order -->
+    <div class="section">
+        <h2>Read Order</h2>
+        <label for="read-order-id">Order ID:</label>
+        <input type="number" id="read-order-id" required>
+        <button id="read-order-btn">Read Order</button>
+        <div id="read-order-result" class="result"></div>
+    </div>
+
+    <!-- Section for creating a shipment -->
+    <div class="section">
+        <h2>Create Shipment</h2>
+        <form id="create-shipment-form">
+            <label for="shipment-weight">Weight:</label>
+            <input type="number" id="shipment-weight" name="weight" required>
+            <label for="shipment-destination">Destination:</label>
+            <input type="text" id="shipment-destination" name="destination" required>
+            <label for="shipment-status">Status:</label>
+            <input type="text" id="shipment-status" name="status" required>
+            <button type="submit">Create Shipment</button>
+        </form>
+        <div id="shipment-result" class="result"></div>
+    </div>
+
+    <!-- Section for reading a shipment -->
+    <div class="section">
+        <h2>Read Shipment</h2>
+        <label for="read-shipment-id">Shipment ID:</label>
+        <input type="number" id="read-shipment-id" required>
+        <button id="read-shipment-btn">Read Shipment</button>
+        <div id="read-shipment-result" class="result"></div>
+    </div>
+
+    <script>
+        const apiBaseUrl = 'http://localhost:8000';
+
+        // Create User
+        document.getElementById('create-user-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('user-name').value;
+            const email = document.getElementById('user-email').value;
+
+            fetch(`${apiBaseUrl}/users/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('user-result').innerHTML = `User Created: ${data.name} (ID: ${data.id})`;
+            })
+            .catch(error => {
+                document.getElementById('user-result').innerHTML = `Error: ${error}`;
+            });
+        });
+
+        // Read User
+        document.getElementById('read-user-btn').addEventListener('click', function () {
+            const userId = document.getElementById('read-user-id').value;
+
+            fetch(`${apiBaseUrl}/users/${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('read-user-result').innerHTML = `User: ${data.name}, Email: ${data.email}`;
+            })
+            .catch(error => {
+                document.getElementById('read-user-result').innerHTML = `Error: ${error}`;
+            });
+        });
+
+        // Create Order
+        document.getElementById('create-order-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const total_price = document.getElementById('order-price').value;
+            const user_id = document.getElementById('order-user-id').value || null;
+
+            fetch(`${apiBaseUrl}/orders/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ total_price, user_id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('order-result').innerHTML = `Order Created: ID: ${data.id}, Price: ${data.total_price}`;
+            })
+            .catch(error => {
+                document.getElementById('order-result').innerHTML = `Error: ${error}`;
+            });
+        });
+
+        // Read Order
+        document.getElementById('read-order-btn').addEventListener('click', function () {
+            const orderId = document.getElementById('read-order-id').value;
+
+            fetch(`${apiBaseUrl}/orders/${orderId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('read-order-result').innerHTML = `Order ID: ${data.id}, Total Price: ${data.total_price}`;
+            })
+            .catch(error => {
+                document.getElementById('read-order-result').innerHTML = `Error: ${error}`;
+            });
+        });
+
+        // Create Shipment
+        document.getElementById('create-shipment-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const weight = document.getElementById('shipment-weight').value;
+            const destination = document.getElementById('shipment-destination').value;
+            const status = document.getElementById('shipment-status').value;
+
+            fetch(`${apiBaseUrl}/shipments/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ weight, destination, status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('shipment-result').innerHTML = `Shipment Created: ID: ${data.id}, Weight: ${data.weight}, Destination: ${data.destination}`;
+            })
+            .catch(error => {
+                document.getElementById('shipment-result').innerHTML = `Error: ${error}`;
+            });
+        });
+
+        // Read Shipment
+        document.getElementById('read-shipment-btn').addEventListener('click', function () {
+            const shipmentId = document.getElementById('read-shipment-id').value;
+
+            fetch(`${apiBaseUrl}/shipments/${shipmentId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('read-shipment-result').innerHTML = `Shipment ID: ${data.id}, Destination: ${data.destination}, Status: ${data.status}`;
+            })
+            .catch(error => {
+                document.getElementById('read-shipment-result').innerHTML = `Error: ${error}`;
+            });
+        });
+    </script>
+</body>
+</html>

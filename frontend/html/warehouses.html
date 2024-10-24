@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Warehouses</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1, h2 { color: #333; }
+        .section { margin-bottom: 40px; }
+        label { display: block; margin-top: 10px; }
+        input, button { margin-top: 10px; padding: 8px; font-size: 16px; }
+        button { cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+        button:hover { background-color: #45a049; }
+        .result { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Manage Warehouses</h1>
+
+    <!-- Create Warehouse -->
+    <div class="section">
+        <h2>Create Warehouse</h2>
+        <form id="create-warehouse-form">
+            <label for="warehouse-location">Location:</label>
+            <input type="text" id="warehouse-location" required>
+            <label for="warehouse-capacity">Capacity:</label>
+            <input type="number" id="warehouse-capacity" required>
+            <button type="submit">Create Warehouse</button>
+        </form>
+        <div id="warehouse-result" class="result"></div>
+    </div>
+
+    <!-- Read Warehouse -->
+    <div class="section">
+        <h2>Read Warehouse</h2>
+        <label for="read-warehouse-id">Warehouse ID:</label>
+        <input type="number" id="read-warehouse-id" required>
+        <button id="read-warehouse-btn">Read Warehouse</button>
+        <div id="read-warehouse-result" class="result"></div>
+    </div>
+
+    <!-- Update Warehouse -->
+    <div class="section">
+        <h2>Update Warehouse</h2>
+        <form id="update-warehouse-form">
+            <label for="update-warehouse-id">Warehouse ID:</label>
+            <input type="number" id="update-warehouse-id" required>
+            <label for="update-warehouse-location">Location:</label>
+            <input type="text" id="update-warehouse-location">
+            <label for="update-warehouse-capacity">Capacity:</label>
+            <input type="number" id="update-warehouse-capacity">
+            <button type="submit">Update Warehouse</button>
+        </form>
+        <div id="update-warehouse-result" class="result"></div>
+    </div>
+
+    <!-- Delete Warehouse -->
+    <div class="section">
+        <h2>Delete Warehouse</h2>
+        <label for="delete-warehouse-id">Warehouse ID:</label>
+        <input type="number" id="delete-warehouse-id" required>
+        <button id="delete-warehouse-btn">Delete Warehouse</button>
+        <div id="delete-warehouse-result" class="result"></div>
+    </div>
+
+    <script src="js/warehouses.js"></script>
+</body>
+</html>

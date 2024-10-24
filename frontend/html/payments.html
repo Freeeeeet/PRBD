@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Payments</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1, h2 { color: #333; }
+        .section { margin-bottom: 40px; }
+        label { display: block; margin-top: 10px; }
+        input, button { margin-top: 10px; padding: 8px; font-size: 16px; }
+        button { cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+        button:hover { background-color: #45a049; }
+        .result { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Manage Payments</h1>
+
+    <!-- Create Payment -->
+    <div class="section">
+        <h2>Create Payment</h2>
+        <form id="create-payment-form">
+            <label for="payment-amount">Amount:</label>
+            <input type="number" id="payment-amount" required>
+            <label for="payment-order-id">Order ID:</label>
+            <input type="number" id="payment-order-id" required>
+            <button type="submit">Create Payment</button>
+        </form>
+        <div id="payment-result" class="result"></div>
+    </div>
+
+    <!-- Read Payment -->
+    <div class="section">
+        <h2>Read Payment</h2>
+        <label for="read-payment-id">Payment ID:</label>
+        <input type="number" id="read-payment-id" required>
+        <button id="read-payment-btn">Read Payment</button>
+        <div id="read-payment-result" class="result"></div>
+    </div>
+
+    <!-- Update Payment -->
+    <div class="section">
+        <h2>Update Payment</h2>
+        <form id="update-payment-form">
+            <label for="update-payment-id">Payment ID:</label>
+            <input type="number" id="update-payment-id" required>
+            <label for="update-payment-amount">Amount:</label>
+            <input type="number" id="update-payment-amount">
+            <label for="update-payment-order-id">Order ID:</label>
+            <input type="number" id="update-payment-order-id">
+            <button type="submit">Update Payment</button>
+        </form>
+        <div id="update-payment-result" class="result"></div>
+    </div>
+
+    <!-- Delete Payment -->
+    <div class="section">
+        <h2>Delete Payment</h2>
+        <label for="delete-payment-id">Payment ID:</label>
+        <input type="number" id="delete-payment-id" required>
+        <button id="delete-payment-btn">Delete Payment</button>
+        <div id="delete-payment-result" class="result"></div>
+    </div>
+
+    <script src="js/payments.js"></script>
+</body>
+</html>
