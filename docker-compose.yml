@@ -25,6 +25,7 @@ services:
       - "8200:8000"
     networks:
       - app_network
+      - shared_network
 
   frontend:
     build:
