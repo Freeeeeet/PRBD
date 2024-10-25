@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://localhost:8000';
+const apiBaseUrl = 'http://backend:8000';
 
 // Create Invoice
 document.getElementById('create-invoice-form').addEventListener('submit', function (e) {

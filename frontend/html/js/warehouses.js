@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://localhost:8000';
+const apiBaseUrl = 'http://backend:8000';
 
 // Create Warehouse
 document.getElementById('create-warehouse-form').addEventListener('submit', function (e) {

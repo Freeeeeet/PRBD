@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://localhost:8000';
+const apiBaseUrl = 'http://backend:8000';
 
 // Create Inventory
 document.getElementById('create-inventory-form').addEventListener('submit', function (e) {
