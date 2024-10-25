@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://backend:8000';
+const apiBaseUrl = '/api';
 
 // Create Order
 document.getElementById('create-order-form').addEventListener('submit', function (e) {

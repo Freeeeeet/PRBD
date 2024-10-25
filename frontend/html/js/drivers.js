@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://backend:8000';
+const apiBaseUrl = '/api';
 
 // Create Driver
 document.getElementById('create-driver-form').addEventListener('submit', function (e) {

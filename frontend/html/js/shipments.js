@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://backend:8000';
+const apiBaseUrl = '/api';
 
 // Create Shipment
 document.getElementById('create-shipment-form').addEventListener('submit', function (e) {

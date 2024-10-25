@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://backend:8000';
+const apiBaseUrl = '/api';
 
 // Create User
 document.getElementById('create-user-form').addEventListener('submit', function (e) {
