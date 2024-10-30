@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
 -- Create users table
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 
 -- Create orders table
-CREATE TABLE IF NOT EXISTS orders (
+CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     total_price DECIMAL NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 -- Create shipments table
-CREATE TABLE IF NOT EXISTS shipments (
+CREATE TABLE shipments (
     id SERIAL PRIMARY KEY,
     weight DECIMAL NOT NULL,
     source_location VARCHAR(255) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS shipments (
 );
 
 -- Create many-to-many relationship between orders and shipments
-CREATE TABLE IF NOT EXISTS order_shipments (
+CREATE TABLE order_shipments (
     id SERIAL PRIMARY KEY,
     order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
     shipment_id INTEGER REFERENCES shipments(id) ON DELETE CASCADE
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS order_shipments (
 
 
 -- Create payments table
-CREATE TABLE IF NOT EXISTS payments (
+CREATE TABLE payments (
     id SERIAL PRIMARY KEY,
     amount DECIMAL NOT NULL,
     order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 
 -- Create invoices table
-CREATE TABLE IF NOT EXISTS invoices (
+CREATE TABLE invoices (
     id SERIAL PRIMARY KEY,
     order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
     total_amount DECIMAL NOT NULL,
@@ -58,39 +58,39 @@ CREATE TABLE IF NOT EXISTS invoices (
 );
 
 -- Create delivery_status table
-CREATE TABLE IF NOT EXISTS delivery_status (
+CREATE TABLE delivery_status (
     id SERIAL PRIMARY KEY,
     status_name VARCHAR(50) NOT NULL
 );
 
 -- Create roles table
-CREATE TABLE IF NOT EXISTS roles (
+CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
     role_name VARCHAR(50) NOT NULL
 );
 
 -- Create permissions table
-CREATE TABLE IF NOT EXISTS permissions (
+CREATE TABLE permissions (
     id SERIAL PRIMARY KEY,
     permission VARCHAR(50) NOT NULL
 );
 
 -- Create role_permissons table
-CREATE TABLE IF NOT EXISTS role_permissons (
+CREATE TABLE role_permissons (
     id SERIAL PRIMARY KEY,
     role_id INTEGER REFERENCES roles(id) ON DELETE CASCADE,
     permission_id INTEGER REFERENCES permissions(id) ON DELETE CASCADE
 );
 
 -- Create user_roles table
-CREATE TABLE IF NOT EXISTS user_roles (
+CREATE TABLE user_roles (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     role_id INTEGER REFERENCES user_roles(id) ON DELETE CASCADE
 );
 
 -- Create shipment_history table
-CREATE TABLE IF NOT EXISTS shipment_history (
+CREATE TABLE shipment_history (
     id SERIAL PRIMARY KEY,
     shipment_id INTEGER REFERENCES shipments(id) ON DELETE CASCADE,
     status_id INTEGER REFERENCES delivery_status(id) ON DELETE CASCADE,
