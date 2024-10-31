@@ -8,11 +8,20 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
-
+-- Create tokens table
+CREATE TABLE tokens (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    token VARCHAR(255) NOT NULL,
+    issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    is_revoked BOOLEAN DEFAULT FALSE
+);
 
 -- Create orders table
 CREATE TABLE orders (
@@ -86,7 +95,7 @@ CREATE TABLE role_permissons (
 CREATE TABLE user_roles (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    role_id INTEGER REFERENCES user_roles(id) ON DELETE CASCADE
+    role_id INTEGER REFERENCES roles(id) ON DELETE CASCADE
 );
 
 -- Create shipment_history table
