@@ -17,7 +17,7 @@ def create_user(db: Session, user: schemas.UserCreateRequest):
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-        logger.info(f"User {user.username} added to database correctly, returning user")
+        logger.info(f"User {user.email} added to database correctly, returning user")
         return db_user
     except Exception as e:
         db.rollback()
