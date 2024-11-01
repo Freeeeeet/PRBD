@@ -22,3 +22,15 @@ class UserCreateResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+class LoginUserRequest(BaseModel):
+    email: EmailStr = Field(..., description="Must be valid e-mail address.", examples=["gosling@gmail.com"])
+    password: str = Field(..., pattern=r'^.{8,50}$',
+                          description="Password must be between 8 and 50 characters.", examples=["StrongPass123"])
+
+    class Config:
+        from_attributes = True
+
+
+class LoginUserResponse(BaseModel):
+    token: str

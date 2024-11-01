@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas import UserCreateRequest, UserCreateResponse
-from app.crud.users_crud import get_user_by_email, create_user
+from app import schemas, models
+from app.crud.users_crud import get_user_by_email, create_user, authenticate_user, create_token, get_token
 
 router = APIRouter()
 
 
-@router.post("/register/", response_model=UserCreateResponse)
-def register_user(user: UserCreateRequest, db: Session = Depends(get_db)):
+@router.post("/register/", response_model=schemas.UserCreateResponse)
+def register_user(user: schemas.UserCreateRequest, db: Session = Depends(get_db)):
     existing_user = get_user_by_email(db=db, email=user.email)
     if existing_user:
         raise HTTPException(
@@ -19,20 +19,18 @@ def register_user(user: UserCreateRequest, db: Session = Depends(get_db)):
     return {"success": True}
 
 
-# @router.get("/users/{user_id}", response_model=UserResponse)
-# def read_user(user_id: int, db: Session = Depends(get_db)):
-#     user = get_user(db=db, user_id=user_id)
-#     if user is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return user
-#
-#
-# @router.delete("/users/{user_id}", response_model=dict)
-# def delete_user(user_id: int, db: Session = Depends(get_db)):
-#     return delete_user_by_id(db=db, user_id=user_id)
-#
-#
-# @router.put("/users/{user_id}", response_model=UserResponse)
-# def update_user_endpoint(user_id: int, user_data: UserCreate, db: Session = Depends(get_db)):
-#     return update_user(db=db, user_id=user_id, user_data=user_data)
-
+@router.post("/login", response_model=schemas.LoginUserResponse)
+def login_user(login_user: schemas.LoginUserRequest, db: Session = Depends(get_db)):
+    user = authenticate_user(db=db, email=login_user.email, password=login_user.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password"
+        )
+    token = get_token(db=db, user_id=user.id)
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+    return {"token": token.token}

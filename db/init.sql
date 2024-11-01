@@ -49,7 +49,6 @@ CREATE TABLE payments (
     id SERIAL PRIMARY KEY,
     amount DECIMAL NOT NULL,
     order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     pay_ts TIMESTAMP DEFAULT NOW()
 );
 

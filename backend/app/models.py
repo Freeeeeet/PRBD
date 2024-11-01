@@ -67,7 +67,6 @@ class Payment(Base):
     id = Column(Integer, primary_key=True, index=True)
     amount = Column(Float)
     order_id = Column(Integer, ForeignKey("orders.id"))
-    user_id = Column(Integer, ForeignKey("users.id"))
     pay_ts = Column(DateTime, default=datetime.now())
 
 
