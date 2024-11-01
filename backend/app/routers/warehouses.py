@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import WarehouseCreate, WarehouseResponse
-from app.crud import create_warehouse, get_warehouse, delete_warehouse_by_id, update_warehouse
+from app.crud.crud import create_warehouse, get_warehouse, delete_warehouse_by_id, update_warehouse
 
 router = APIRouter()
 

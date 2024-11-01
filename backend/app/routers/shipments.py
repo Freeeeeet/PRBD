@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import ShipmentCreate, ShipmentResponse
-from app.crud import create_shipment, get_shipment, delete_shipment_by_id, update_shipment
+from app.crud.crud import create_shipment, get_shipment, delete_shipment_by_id, update_shipment
 
 router = APIRouter()
 

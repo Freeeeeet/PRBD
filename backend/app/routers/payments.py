@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import PaymentCreate, PaymentResponse
-from app.crud import create_payment, get_payment, delete_payment_by_id, update_payment
+from app.crud.crud import create_payment, get_payment, delete_payment_by_id, update_payment
 
 router = APIRouter()
 

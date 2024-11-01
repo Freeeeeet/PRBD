@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import InvoiceCreate, InvoiceResponse
-from app.crud import create_invoice, get_invoice, delete_invoice_by_id, update_invoice
+from app.crud.crud import create_invoice, get_invoice, delete_invoice_by_id, update_invoice
 
 router = APIRouter()
 

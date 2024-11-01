@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import VehicleCreate, VehicleResponse
-from app.crud import create_vehicle, get_vehicle, delete_vehicle_by_id, update_vehicle
+from app.crud.crud import create_vehicle, get_vehicle, delete_vehicle_by_id, update_vehicle
 
 router = APIRouter()
 

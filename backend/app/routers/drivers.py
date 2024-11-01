@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import DriverCreate, DriverResponse
-from app.crud import create_driver, get_driver, delete_driver_by_id, update_driver
+from app.crud.crud import create_driver, get_driver, delete_driver_by_id, update_driver
 
 router = APIRouter()
 
