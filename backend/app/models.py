@@ -13,8 +13,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.now())
     updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
 
-    orders = relationship("Order", back_populates="users")
-    tokens = relationship("Token", back_populates="users")
+    tokens = relationship("Token", back_populates="user")
 
 
 class Token(Base):

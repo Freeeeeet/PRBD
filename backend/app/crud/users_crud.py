@@ -32,13 +32,6 @@ def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
 
-def authenticate_user(db: Session, username: str, password: str):
-    user = get_user_by_username(db, username)
-    if not user or not verify_password(password, user.password_hash):
-        return None
-    return user
-
-
 def create_token(db: Session, user_id: int):
     try:
         access_token = create_access_token()
