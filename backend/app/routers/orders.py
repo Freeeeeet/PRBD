@@ -8,7 +8,7 @@ from app.config import logger
 router = APIRouter()
 
 
-@router.post("/orders/", response_model=OrderCreateResponse)
+@router.post("/create/", response_model=OrderCreateResponse)
 def create_order_endpoint(order: OrderCreateRequest, db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=order.token)
 
