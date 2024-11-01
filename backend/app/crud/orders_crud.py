@@ -30,3 +30,12 @@ def create_order(db: Session, order: schemas.OrderCreateRequest, user_id: int):
             detail="An error occurred while adding order to the database."
         )
 
+
+def get_order(db: Session, order_id: int):
+    try:
+        order = db.query(models.Order).filter(models.Order.id == order_id).first()
+        return order
+    except Exception as e:
+        logger.error(f"An error occurred while getting order {order_id} from db {e}", exc_info=True)
+        return None
+

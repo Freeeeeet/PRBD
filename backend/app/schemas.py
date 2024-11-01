@@ -3,7 +3,10 @@ from typing import List, Optional
 from datetime import datetime
 
 
-# User schema
+class OnlyAuthRequestBody(BaseModel):
+    token: str
+
+
 class UserCreateRequest(BaseModel):
     name: str = Field(..., pattern=r'^[\w\sа-яА-ЯёЁ-]{1,50}$',
                       description="Must be 1-50 characters: letters (any language), numbers, spaces, and - only.",
@@ -61,3 +64,14 @@ class OrderCreateResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class OrderInfoResponse(BaseModel):
+    id: int
+    weight: float
+    source_location: str
+    destination_location: str
+    tracking_number: str
+    total_price: float
+    created_at: datetime
+
