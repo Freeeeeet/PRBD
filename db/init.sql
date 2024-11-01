@@ -1,8 +1,3 @@
-DROP TABLE IF EXISTS order_shipments CASCADE;
-DROP TABLE IF EXISTS shipments CASCADE;
-DROP TABLE IF EXISTS orders CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-
 -- Create users table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -105,8 +100,3 @@ CREATE TABLE shipment_history (
     status_id INTEGER REFERENCES delivery_status(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT NOW()
 );
-
--- Indexes for optimizing queries
-CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
-CREATE INDEX IF NOT EXISTS idx_shipments_destination_location ON shipments(destination_location);
