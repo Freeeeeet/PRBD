@@ -14,6 +14,7 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
 
     tokens = relationship("Token", back_populates="user")
+    orders = relationship("Order", back_populates="user")
 
 
 class Token(Base):
