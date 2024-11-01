@@ -50,7 +50,7 @@ def create_token(db: Session, user_id: int):
         db.commit()
         db.refresh(db_token)
         logger.info(f"Token for user {user_id} added to database correctly, returning user")
-        return access_token
+        return db_token
     except Exception as e:
         db.rollback()
         logger.error(f"An error occurred while adding token to DB. {e}", exc_info=True)
