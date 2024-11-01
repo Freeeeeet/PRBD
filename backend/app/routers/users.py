@@ -1,14 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app import schemas, models
-from app.crud.users_crud import get_user_by_email, create_user, authenticate_user, create_token, get_token
-
+from app import schemas
+from app.crud.users_crud import get_user_by_email, create_user, authenticate_user, create_token, get_token, check_auth
+from app.config import logger
 router = APIRouter()
 
 
-@router.post("/register/", response_model=schemas.UserCreateResponse)
-def register_user(user: schemas.UserCreateRequest, db: Session = Depends(get_db)):
+@router.post("/create/", response_model=schemas.UserCreateResponse)
+def create_user_endpoint(user: schemas.UserCreateRequest, db: Session = Depends(get_db)):
+    authed_user = check_auth(db=db, token=user.token)
+    if not authed_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )
     existing_user = get_user_by_email(db=db, email=user.email)
     if existing_user:
         raise HTTPException(
@@ -16,11 +22,12 @@ def register_user(user: schemas.UserCreateRequest, db: Session = Depends(get_db)
             detail="User with this e-mail already registered."
         )
     create_user(db=db, user=user)
+    logger.info(f"User {user.email} registered successfully")
     return {"success": True}
 
 
 @router.post("/login", response_model=schemas.LoginUserResponse)
-def login_user(login_user: schemas.LoginUserRequest, db: Session = Depends(get_db)):
+def login_user_endpoint(login_user: schemas.LoginUserRequest, db: Session = Depends(get_db)):
     user = authenticate_user(db=db, email=login_user.email, password=login_user.password)
     if not user:
         raise HTTPException(
@@ -30,5 +37,6 @@ def login_user(login_user: schemas.LoginUserRequest, db: Session = Depends(get_d
     token = get_token(db=db, user_id=user.id)
     if not token:
         token = create_token(db=db, user_id=user.id)
-        return {"token": token}
-    return {"token": token.token}
+
+    logger.info(f"User {user.id} logged in successfully.")
+    return {"token": f"{token.token}"}

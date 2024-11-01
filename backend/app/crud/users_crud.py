@@ -68,3 +68,11 @@ def get_token(db: Session, user_id: int):
         logger.error(f"An error occurred while getting token from db for user {user_id}: {e}", exc_info=True)
         return None
 
+
+def check_auth(db: Session, token: str):
+    try:
+        user = db.query(models.Token).filter(models.Token.token == token).first()
+        return user
+    except Exception as e:
+        logger.error(f"An error occurred while checking user token: {e}", exc_info=True)
+        return None

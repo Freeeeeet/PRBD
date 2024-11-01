@@ -21,28 +21,14 @@ CREATE TABLE tokens (
 -- Create orders table
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
-    total_price DECIMAL NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW(),
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
-);
-
--- Create shipments table
-CREATE TABLE shipments (
-    id SERIAL PRIMARY KEY,
     weight DECIMAL NOT NULL,
     source_location VARCHAR(255) NOT NULL,
     destination_location VARCHAR(255) NOT NULL,
     tracking_number VARCHAR(25) NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
+    total_price DECIMAL NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
 );
-
--- Create many-to-many relationship between orders and shipments
-CREATE TABLE order_shipments (
-    id SERIAL PRIMARY KEY,
-    order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
-    shipment_id INTEGER REFERENCES shipments(id) ON DELETE CASCADE
-);
-
 
 -- Create payments table
 CREATE TABLE payments (
@@ -95,7 +81,7 @@ CREATE TABLE user_roles (
 -- Create shipment_history table
 CREATE TABLE shipment_history (
     id SERIAL PRIMARY KEY,
-    shipment_id INTEGER REFERENCES shipments(id) ON DELETE CASCADE,
+    order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
     status_id INTEGER REFERENCES delivery_status(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT NOW()
 );

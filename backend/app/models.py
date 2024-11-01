@@ -33,33 +33,15 @@ class Token(Base):
 class Order(Base):
     __tablename__ = "orders"
     id = Column(Integer, primary_key=True, index=True)
+    weight = Column(Float)
+    source_location = Column(String, index=True)
+    destination_location = Column(String, index=True)
+    tracking_number = Column(String)
     total_price = Column(Float)
     created_at = Column(DateTime, default=datetime.now())
     user_id = Column(Integer, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="orders")
-
-
-class Shipment(Base):
-    __tablename__ = "shipments"
-
-    id = Column(Integer, primary_key=True, index=True)
-    weight = Column(Float)
-    source_location = Column(String, index=True)
-    destination_location = Column(String, index=True)
-    tracking_number = Column(String)
-    created_at = Column(DateTime, default=datetime.now())
-
-    shipment_history = relationship("ShipmentHistory")
-
-
-class OrderShipment(Base):
-    __tablename__ = "order_shipments"
-
-    id = Column(Integer, primary_key=True, index=True)
-    order_id = Column(Integer, ForeignKey("orders.id"))
-    shipment_id = Column(Integer, ForeignKey("shipments.id"))
-
 
 class Payment(Base):
     __tablename__ = "payments"
@@ -120,6 +102,6 @@ class ShipmentHistory(Base):
     __tablename__ = "shipment_history"
 
     id = Column(Integer, primary_key=True, index=True)
-    shipment_id = Column(Integer, ForeignKey("shipments.id"))
+    order_id = Column(Integer, ForeignKey("orders.id"))
     status_id = Column(Integer, ForeignKey("delivery_status.id"))
     created_at = Column(DateTime, default=datetime.now())
