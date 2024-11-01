@@ -8,7 +8,7 @@ router = APIRouter()
 
 
 @router.post("/create/", response_model=schemas.UserCreateResponse)
-def create_user_endpoint(user: schemas.UserCreateRequest, token: Header(...), db: Session = Depends(get_db)):
+def create_user_endpoint(user: schemas.UserCreateRequest, token: str = Header(...), db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
     if not authed_user:
         raise HTTPException(

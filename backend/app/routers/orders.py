@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post("/create/", response_model=OrderCreateResponse)
-def create_order_endpoint(order: OrderCreateRequest, token: Header(...), db: Session = Depends(get_db)):
+def create_order_endpoint(order: OrderCreateRequest, token: str = Header(...), db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
     if not authed_user:
         raise HTTPException(
@@ -23,7 +23,7 @@ def create_order_endpoint(order: OrderCreateRequest, token: Header(...), db: Ses
 
 
 @router.get("/{order_id}", response_model=OrderInfoResponse)
-def read_order(order_id: int, token: Header(...), db: Session = Depends(get_db)):
+def read_order(order_id: int, token: str = Header(...), db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
     if not authed_user:
         raise HTTPException(
