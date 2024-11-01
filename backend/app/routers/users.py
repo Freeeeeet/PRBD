@@ -29,8 +29,6 @@ def login_user(login_user: schemas.LoginUserRequest, db: Session = Depends(get_d
         )
     token = get_token(db=db, user_id=user.id)
     if not token:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error"
-        )
-    return {"token": token}
+        token = create_token(db=db, user_id=user.id)
+        return {"token": token}
+    return {"token": token.token}

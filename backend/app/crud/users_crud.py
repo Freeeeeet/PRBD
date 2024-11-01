@@ -63,9 +63,6 @@ def create_token(db: Session, user_id: int):
 def get_token(db: Session, user_id: int):
     try:
         token = db.query(models.Token).filter(models.Token.user_id == user_id).first()
-        if not token:
-            token = create_token(db=db, user_id=user_id)
-            return token
         return token
     except Exception as e:
         logger.error(f"An error occurred while getting token from db for user {user_id}: {e}", exc_info=True)
