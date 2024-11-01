@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas import OrderCreateRequest, OrderCreateResponse, OnlyAuthRequestBody, OrderInfoResponse
+from app.schemas import OrderCreateRequest, OrderCreateResponse, OrderInfoResponse
 from app.crud.orders_crud import create_order, get_order
 from app.crud.users_crud import check_auth
 from app.config import logger
