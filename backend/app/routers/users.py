@@ -33,4 +33,4 @@ def login_user(login_user: schemas.LoginUserRequest, db: Session = Depends(get_d
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal server error"
         )
-    return {"token": token.token}
+    return {"token": token}
