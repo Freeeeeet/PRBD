@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app import schemas
@@ -8,8 +8,8 @@ router = APIRouter()
 
 
 @router.post("/create/", response_model=schemas.UserCreateResponse)
-def create_user_endpoint(user: schemas.UserCreateRequest, db: Session = Depends(get_db)):
-    authed_user = check_auth(db=db, token=user.token)
+def create_user_endpoint(user: schemas.UserCreateRequest, token: Header(...), db: Session = Depends(get_db)):
+    authed_user = check_auth(db=db, token=token)
     if not authed_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

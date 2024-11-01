@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import OrderCreateRequest, OrderCreateResponse, OnlyAuthRequestBody, OrderInfoResponse
@@ -9,8 +9,8 @@ router = APIRouter()
 
 
 @router.post("/create/", response_model=OrderCreateResponse)
-def create_order_endpoint(order: OrderCreateRequest, db: Session = Depends(get_db)):
-    authed_user = check_auth(db=db, token=order.token)
+def create_order_endpoint(order: OrderCreateRequest, token: Header(...), db: Session = Depends(get_db)):
+    authed_user = check_auth(db=db, token=token)
     if not authed_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -23,8 +23,8 @@ def create_order_endpoint(order: OrderCreateRequest, db: Session = Depends(get_d
 
 
 @router.get("/{order_id}", response_model=OrderInfoResponse)
-def read_order(order_id: int, auth: OnlyAuthRequestBody, db: Session = Depends(get_db)):
-    authed_user = check_auth(db=db, token=auth.token)
+def read_order(order_id: int, token: Header(...), db: Session = Depends(get_db)):
+    authed_user = check_auth(db=db, token=token)
     if not authed_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

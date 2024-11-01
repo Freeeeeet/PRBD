@@ -3,8 +3,8 @@ from typing import List, Optional
 from datetime import datetime
 
 
-class OnlyAuthRequestBody(BaseModel):
-    token: str
+# class OnlyAuthRequestBody(BaseModel):
+#     token: str
 
 
 class UserCreateRequest(BaseModel):
@@ -14,8 +14,8 @@ class UserCreateRequest(BaseModel):
     email: EmailStr = Field(..., description="Must be valid e-mail address.", examples=["gosling@gmail.com"])
     password: str = Field(..., pattern=r'^.{8,50}$',
                           description="Password must be between 8 and 50 characters.", examples=["StrongPass123"])
-    token: str = Field(..., description="Authorization token to verify user identity.",
-                       examples=["eyJhbGciOiJIUzI1NiIsInR5cCI6"])
+    # token: str = Field(..., description="Authorization token to verify user identity.",
+    #                    examples=["eyJhbGciOiJIUzI1NiIsInR5cCI6"])
 
     class Config:
         from_attributes = True
@@ -52,8 +52,8 @@ class OrderCreateRequest(BaseModel):
     total_price: condecimal(gt=0, max_digits=10, decimal_places=2) = Field(...,
                                   description="Total price of the order in currency. Must be positive.",
                                                                            examples=[199.99])
-    token: str = Field(..., description="Authorization token to verify user identity.",
-                       examples=["eyJhbGciOiJIUzI1NiIsInR5cCI6"])
+    # token: str = Field(..., description="Authorization token to verify user identity.",
+    #                    examples=["eyJhbGciOiJIUzI1NiIsInR5cCI6"])
 
     class Config:
         from_attributes = True
@@ -74,4 +74,7 @@ class OrderInfoResponse(BaseModel):
     tracking_number: str
     total_price: float
     created_at: datetime
+
+    class Config:
+        from_attributes = True
 
