@@ -49,7 +49,8 @@ CREATE TABLE invoices (
 -- Create delivery_status table
 CREATE TABLE delivery_status (
     id SERIAL PRIMARY KEY,
-    status_name VARCHAR(50) NOT NULL
+    status_name VARCHAR(50) NOT NULL,
+    description VARCHAR(50)
 );
 
 -- Create roles table
