@@ -81,8 +81,8 @@ def get_delivery_statuses(db: Session):
     try:
         statuses = db.query(models.DeliveryStatus).all()
         if statuses:
-            statuses = [schemas.OrderDeliveryStatusesResponse(id=status_item.id, status_name=status_item.status_name,
-                                                              created_at=status_item.description) for status_item
+            statuses = [schemas.OrderDeliveryStatusResponse(id=status_item.id, status_name=status_item.status_name,
+                                                            description=status_item.description) for status_item
                         in statuses]
         return statuses
     except Exception as e:
