@@ -1,16 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas import OrderCreateRequest, OrderCreateResponse, OrderInfoResponse, OrderChangeStatusResponse, \
-    OrderChangeStatusRequest
-from app.crud.orders_crud import create_order, get_order, change_status
+from app import schemas
+from app.crud.orders_crud import create_order, get_order, change_status, get_delivery_statuses
 from app.crud.users_crud import check_auth
 from app.config import logger
 router = APIRouter()
 
 
-@router.post("/create/", response_model=OrderCreateResponse)
-def create_order_endpoint(order: OrderCreateRequest, token: str = Header(...), db: Session = Depends(get_db)):
+@router.post("/create/", response_model=schemas.OrderCreateResponse)
+def create_order_endpoint(order: schemas.OrderCreateRequest, token: str = Header(...), db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
     if not authed_user:
         raise HTTPException(
@@ -23,7 +22,7 @@ def create_order_endpoint(order: OrderCreateRequest, token: str = Header(...), d
     return {"order_id": new_order.id}
 
 
-@router.get("/{order_id}", response_model=OrderInfoResponse)
+@router.get("/{order_id}", response_model=schemas.OrderInfoResponse)
 def read_order_endpoint(order_id: int, token: str = Header(...), db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
     if not authed_user:
@@ -38,8 +37,8 @@ def read_order_endpoint(order_id: int, token: str = Header(...), db: Session = D
     return order
 
 
-@router.post("/change_order_status/", response_model=OrderChangeStatusResponse)
-def change_order_status_endpoint(order_status: OrderChangeStatusRequest, token: str = Header(...),
+@router.post("/change_order_status/", response_model=schemas.OrderChangeStatusResponse)
+def change_order_status_endpoint(order_status: schemas.OrderChangeStatusRequest, token: str = Header(...),
                                  db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
     if not authed_user:
@@ -50,6 +49,21 @@ def change_order_status_endpoint(order_status: OrderChangeStatusRequest, token: 
 
     change_status(db=db, order_status=order_status)
     return {"success": True}
+
+
+@router.get("/order_statuses", response_model=schemas.OrderDeliveryStatusesResponse)
+def read_order_endpoint(token: str = Header(...), db: Session = Depends(get_db)):
+    authed_user = check_auth(db=db, token=token)
+    if not authed_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )
+
+    statuses = get_delivery_statuses(db=db)
+    if not statuses:
+        raise HTTPException(status_code=404, detail="Order statuses not found")
+    return statuses
 
 
 # @router.put("/orders/{order_id}", response_model=OrderResponse)

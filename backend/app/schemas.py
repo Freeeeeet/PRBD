@@ -46,6 +46,15 @@ class OrderStatus(BaseModel):
         from_attributes = True
 
 
+class OrderDeliveryStatusResponse(BaseModel):
+    id: int
+    status_name: str
+    description: str
+
+    class Config:
+        from_attributes = True
+
+
 class OrderCreateRequest(BaseModel):
     weight: condecimal(gt=0, max_digits=10, decimal_places=2) = Field(...,
                                     description="Weight of the order in kilograms. Must be positive.", examples=[12.5])
@@ -99,6 +108,12 @@ class OrderChangeStatusResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+class OrderDeliveryStatusesResponse(BaseModel):
+    statuses: list[OrderDeliveryStatusResponse]
+
+    class Config:
+        from_attributes = True
 
 
 
