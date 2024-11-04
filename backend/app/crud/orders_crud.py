@@ -137,6 +137,7 @@ def get_all_orders(db: Session, offset: int = 0, limit: int = 10) -> List[schema
             )
             .outerjoin(models.ShipmentHistory, models.ShipmentHistory.order_id == models.Order.id)
             .outerjoin(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
+            .order_by(models.Order.id.desc())
             .offset(offset)
             .limit(limit)
             .all()
