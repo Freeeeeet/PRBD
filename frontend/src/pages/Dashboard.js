@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchAllOrders, createOrder, updateOrderStatus } from '../services/api';
 import OrderList from '../components/OrderList';
+import './Dashboard.css';  // Импортируем стили для Dashboard
 
 const Dashboard = () => {
   const [orders, setOrders] = useState([]);
@@ -52,9 +53,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container">
+    <div className="main-container">
       <h2>Панель управления</h2>
-      <OrderList orders={orders} onStatusChange={handleChangeOrderStatus} reloadOrders={loadOrders} />
+      <OrderList orders={orders} onStatusChange={handleChangeOrderStatus} />
       <div>
         <button onClick={() => setOffset(Math.max(0, offset - limit))} disabled={offset === 0}>Предыдущая страница</button>
         <button onClick={() => setOffset(offset + limit)}>Следующая страница</button>
