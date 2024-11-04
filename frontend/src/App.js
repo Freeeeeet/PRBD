@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import './App.css';
@@ -10,18 +10,26 @@ function App() {
   const handleLogin = () => setIsAuthenticated(true);
 
   return (
-    <Router basename="/proekt-db">
+    <BrowserRouter basename="/proekt-db">  {/* Указываем базовый путь для роутинга */}
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <Navigate to="/dashboard" /> : <LoginPage onLogin={handleLogin} />}
+          element={
+            isAuthenticated
+              ? <Navigate to="/dashboard" replace />
+              : <LoginPage onLogin={handleLogin} />
+          }
         />
         <Route
           path="/dashboard"
-          element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
+          element={
+            isAuthenticated
+              ? <Dashboard />
+              : <Navigate to="/" replace />
+          }
         />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
