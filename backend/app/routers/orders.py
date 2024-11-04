@@ -52,7 +52,7 @@ def change_order_status_endpoint(order_status: schemas.OrderChangeStatusRequest,
 
 
 @router.get("/order_statuses", response_model=schemas.OrderDeliveryStatusesResponse)
-def read_order_endpoint(token: str = Header(...), db: Session = Depends(get_db)):
+def read_order_statuses_endpoint(token: str = Header(...), db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
     if not authed_user:
         raise HTTPException(
