@@ -21,13 +21,11 @@ export const login = async (email, password) => {
 };
 
 // Функция для получения списка заказов с пагинацией
-export const fetchAllOrders = (offset = 0, limit = 10) => {
-  const token = localStorage.getItem('token'); // Получаем токен из localStorage
-  return axios.get(`${API_BASE}/orders/`, {
-    headers: { token }, // Передаем токен в заголовке
+export const fetchAllOrders = (token, offset = 0, limit = 10) =>
+  axios.get(${API_BASE}/orders/, {
+    headers: { token: ${token} },
     params: { offset, limit }
   });
-};
 
 // Функция для создания заказа
 export const createOrder = (orderData) => {
