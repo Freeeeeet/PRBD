@@ -12,6 +12,8 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+RUN cp -R public/* build/
+
 # Используем nginx для сервера статических файлов
 FROM nginx:alpine
 COPY --from=build-stage /app/build /usr/share/nginx/html
