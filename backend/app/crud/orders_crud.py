@@ -33,12 +33,17 @@ def create_order(db: Session, order: schemas.OrderCreateRequest, user_id: int):
 
 def get_order(db: Session, order_id: int):
     try:
-        order = db.query(models.Order).filter(models.Order.id == order_id).first()
+        order = db.query(
+            models.Order).filter(models.Order.id == order_id).first()
         if order:
             # Получение истории статусов заказа
             order_statuses = (
-                db.query(models.DeliveryStatus.status_name, models.ShipmentHistory.created_at)
-                .join(models.ShipmentHistory, models.Order.id == models.ShipmentHistory.order_id)
+                db.query(
+                    models.Order.id,
+                    models.DeliveryStatus.status_name,
+                    models.ShipmentHistory.created_at
+                )
+                .join(models.ShipmentHistory, models.ShipmentHistory.order_id == models.Order.id)
                 .join(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
                 .filter(models.Order.id == order_id)
                 .all()
