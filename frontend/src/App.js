@@ -10,7 +10,7 @@ function App() {
   const handleLogin = () => setIsAuthenticated(true);
 
   return (
-    <BrowserRouter>  {/* Убираем basename */}
+    <BrowserRouter basename="/proekt-db">  {/* Убираем basename */}
       <Routes>
         <Route
           path="/"
