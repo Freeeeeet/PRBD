@@ -39,7 +39,7 @@ export const createOrder = (orderData) => {
 // Функция для получения списка всех доступных статусов заказа
 export const fetchOrderStatuses = () => {
   const token = localStorage.getItem('token');
-  return axios.get(`${API_BASE}/order_statuses`, {
+  return axios.get(`${API_BASE}/orders/order_statuses`, {
     headers: { token },
   });
 };
@@ -47,7 +47,7 @@ export const fetchOrderStatuses = () => {
 // Функция для обновления статуса заказа
 export const updateOrderStatus = (orderId, statusId) => {
   const token = localStorage.getItem('token');
-  return axios.post(`${API_BASE}/change_order_status/`, { order_id: orderId, status_id: statusId }, {
+  return axios.post(`${API_BASE}/orders/change_order_status/`, { order_id: orderId, status_id: statusId }, {
     headers: { token },
   });
 };
