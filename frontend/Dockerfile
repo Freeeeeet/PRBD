@@ -15,3 +15,6 @@ RUN npm run build
 # Используем nginx для сервера статических файлов
 FROM nginx:alpine
 COPY --from=build-stage /app/build /usr/share/nginx/html
+
+# Копируем собственный конфиг для Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf

@@ -54,6 +54,7 @@ def read_order_statuses_endpoint(token: str = Header(...), db: Session = Depends
         raise HTTPException(status_code=404, detail="Order statuses not found")
     return statuses_response
 
+
 @router.get("/{order_id}", response_model=schemas.OrderInfoResponse)
 def read_order_endpoint(order_id: int, token: str = Header(...), db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
