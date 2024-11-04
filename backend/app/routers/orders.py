@@ -60,11 +60,11 @@ def read_order_statuses_endpoint(token: str = Header(...), db: Session = Depends
             detail="Invalid token"
         )
 
-    statuses = get_delivery_statuses(db=db)
-    if not statuses:
+    statuses_response = get_delivery_statuses(db=db)
+    if not statuses_response:
         raise HTTPException(status_code=404, detail="Order statuses not found")
-    return statuses
 
+    return statuses_response
 
 # @router.put("/orders/{order_id}", response_model=OrderResponse)
 # def update_order_endpoint(order_id: int, order_data: OrderCreate, db: Session = Depends(get_db)):
