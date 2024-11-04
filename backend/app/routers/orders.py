@@ -81,6 +81,7 @@ def read_order_endpoint(order_id: int, token: str = Header(...), db: Session = D
     order = get_order(db=db, order_id=order_id)
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
+
     return order
 
 

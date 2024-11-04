@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from typing import List
+from typing import List, Optional
 
 from app.config import logger
 from app import models, schemas
@@ -35,10 +35,10 @@ def create_order(db: Session, order: schemas.OrderCreateRequest, user_id: int):
         )
 
 
-def get_order(db: Session, order_id: int):
+def get_order(db: Session, order_id: int) -> Optional[schemas.OrderInfoResponse]:
     try:
-        # Основной запрос для получения данных заказа
-        order_data = (
+        # Основной запрос, загружающий заказ вместе со статусом
+        order = (
             db.query(
                 models.Order.id,
                 models.Order.weight,
@@ -46,54 +46,46 @@ def get_order(db: Session, order_id: int):
                 models.Order.destination_location,
                 models.Order.tracking_number,
                 models.Order.total_price,
-                models.Order.created_at
+                models.Order.created_at,
+                models.DeliveryStatus.status_name,
+                models.DeliveryStatus.description,
+                models.ShipmentHistory.created_at.label("status_created_at")
             )
+            .outerjoin(models.ShipmentHistory, models.ShipmentHistory.order_id == models.Order.id)
+            .outerjoin(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
             .filter(models.Order.id == order_id)
             .first()
         )
 
-        if not order_data:
+        # Проверяем, что заказ найден
+        if not order:
             return None
 
-        # Создаем алиасы для таблиц
-        DeliveryStatusAlias = aliased(models.DeliveryStatus)
-        ShipmentHistoryAlias = aliased(models.ShipmentHistory)
-
-        # Запрос для получения истории статусов заказа с использованием алиасов
-        order_statuses = (
-            db.query(
-                DeliveryStatusAlias.status_name,
-                DeliveryStatusAlias.description,
-                ShipmentHistoryAlias.created_at
-            )
-            .join(ShipmentHistoryAlias, ShipmentHistoryAlias.order_id == order_id)
-            .join(DeliveryStatusAlias, DeliveryStatusAlias.id == ShipmentHistoryAlias.status_id)
-            .all()
+        # Создаём основной объект заказа с пустым списком статусов
+        order_response = schemas.OrderInfoResponse(
+            id=order.id,
+            weight=order.weight,
+            source_location=order.source_location,
+            destination_location=order.destination_location,
+            tracking_number=order.tracking_number,
+            total_price=order.total_price,
+            created_at=order.created_at,
+            order_statuses=[]
         )
 
-        # Преобразуем статусы в нужный формат
-        order_status_list = [
-            schemas.OrderStatus(
-                status_name=status.status_name,
-                description=status.description,
-                created_at=status.created_at
+        # Добавляем статус, если он существует
+        if order.status_name:
+            order_status = schemas.OrderStatus(
+                status_name=order.status_name,
+                description=order.description,
+                created_at=order.status_created_at
             )
-            for status in order_statuses
-        ]
+            order_response.order_statuses.append(order_status)
 
-        # Создаем и возвращаем объект `OrderInfoResponse`
-        return schemas.OrderInfoResponse(
-            id=order_data.id,
-            weight=order_data.weight,
-            source_location=order_data.source_location,
-            destination_location=order_data.destination_location,
-            tracking_number=order_data.tracking_number,
-            total_price=order_data.total_price,
-            created_at=order_data.created_at,
-            order_statuses=order_status_list
-        )
+        return order_response
+
     except Exception as e:
-        logger.error(f"An error occurred while getting order {order_id} from db {e}", exc_info=True)
+        logger.error(f"An error occurred while getting order {order_id} from db: {e}", exc_info=True)
         return None
 
 
