@@ -21,26 +21,34 @@ export const login = async (email, password) => {
 };
 
 // Функция для получения списка заказов с пагинацией
-export const fetchAllOrders = (token, offset = 0, limit = 10) =>
-  axios.get(`${API_BASE}/orders/`, {
-    headers: { token: `${token}` },
+export const fetchAllOrders = (offset = 0, limit = 10) => {
+  const token = localStorage.getItem('token'); // Получаем токен из localStorage
+  return axios.get(`${API_BASE}/orders/`, {
+    headers: { token }, // Передаем токен в заголовке
     params: { offset, limit }
   });
+};
 
 // Функция для создания заказа
-export const createOrder = (orderData, token) =>
-  axios.post(`${API_BASE}/orders/create/`, orderData, {
-    headers: { token: `${token}` }
+export const createOrder = (orderData) => {
+  const token = localStorage.getItem('token'); // Получаем токен из localStorage
+  return axios.post(`${API_BASE}/orders/create/`, orderData, {
+    headers: { token }, // Передаем токен в заголовке
   });
+};
 
 // Функция для получения списка заказов
-export const fetchOrders = (token) =>
-  axios.get(`${API_BASE}/orders`, {
-    headers: { token: `${token}` },
+export const fetchOrders = () => {
+  const token = localStorage.getItem('token'); // Получаем токен из localStorage
+  return axios.get(`${API_BASE}/orders`, {
+    headers: { token }, // Передаем токен в заголовке
   });
+};
 
 // Функция для обновления статуса заказа
-export const updateOrderStatus = (statusData, token) =>
-  axios.post(`${API_BASE}/orders/change_order_status/`, statusData, {
-    headers: { token: `${token}` },
+export const updateOrderStatus = (statusData) => {
+  const token = localStorage.getItem('token'); // Получаем токен из localStorage
+  return axios.post(`${API_BASE}/orders/change_order_status/`, statusData, {
+    headers: { token }, // Передаем токен в заголовке
   });
+};
