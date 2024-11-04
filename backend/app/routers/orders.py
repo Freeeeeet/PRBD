@@ -56,7 +56,7 @@ def read_order_statuses_endpoint(token: str = Header(...), db: Session = Depends
     return statuses_response
 
 
-@router.put("/update/{order_id}", response_model=schemas.OrderResponse)
+@router.put("/update/{order_id}", response_model=schemas.OrderCreateResponse)
 def update_order_endpoint(order_id: int, order_data: schemas.OrderUpdateRequest, token: str = Header(...),
                           db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
@@ -65,8 +65,9 @@ def update_order_endpoint(order_id: int, order_data: schemas.OrderUpdateRequest,
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token"
         )
+    db_order = update_order(db=db, order_id=order_id, order_data=order_data)
+    return {"order_id": db_order.id}
 
-    return update_order(db=db, order_id=order_id, order_data=order_data)
 
 @router.get("/{order_id}", response_model=schemas.OrderInfoResponse)
 def read_order_endpoint(order_id: int, token: str = Header(...), db: Session = Depends(get_db)):

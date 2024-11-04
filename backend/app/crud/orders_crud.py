@@ -86,6 +86,7 @@ def update_order(db: Session, order_id: int, order_data: schemas.OrderUpdateRequ
             detail="An error occurred while updating the order."
         )
 
+
 def get_all_orders(db: Session, offset: int = 0, limit: int = 10) -> List[schemas.OrderInfoResponse]:
     try:
         # Основной запрос, загружающий заказы вместе со статусами
