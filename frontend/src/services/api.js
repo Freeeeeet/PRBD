@@ -30,7 +30,7 @@ export const fetchAllOrders = (token, offset = 0, limit = 10) =>
 // Функция для создания заказа
 export const createOrder = (orderData, token) =>
   axios.post(`${API_BASE}/orders/create/`, orderData, {
-    headers: { token: `${token}` },
+    headers: { token: `${token}` }
   });
 
 // Функция для получения списка заказов
