@@ -67,6 +67,7 @@ class DeliveryStatus(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     status_name = Column(String)
+    description = Column(String)
 
 
 class Roles(Base):
