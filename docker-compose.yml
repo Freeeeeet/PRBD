@@ -28,8 +28,6 @@ services:
   prbd-frontend:
     build:
       context: ./frontend
-    volumes:
-      - ./frontend/html:/usr/share/nginx/html
     networks:
       - shared_network
 
