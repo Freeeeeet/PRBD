@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API_BASE = 'https://prometheussiptelepony.space/proekt-db/api';
 
-
 // Функция для входа
 export const login = async (email, password) => {
   try {
@@ -21,11 +20,13 @@ export const login = async (email, password) => {
 };
 
 // Функция для получения списка заказов с пагинацией
-export const fetchAllOrders = (token, offset = 0, limit = 10) =>
-  axios.get(${API_BASE}/orders/, {
-    headers: { token: ${token} },
+export const fetchAllOrders = (offset = 0, limit = 10) => {
+  const token = localStorage.getItem('token'); // Получаем токен из localStorage
+  return axios.get(`${API_BASE}/orders/`, {
+    headers: { token }, // Передаем токен в заголовке
     params: { offset, limit }
   });
+};
 
 // Функция для создания заказа
 export const createOrder = (orderData) => {
