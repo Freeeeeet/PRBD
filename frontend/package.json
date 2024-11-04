@@ -2,7 +2,7 @@
   "name": "logistics-frontend",
   "version": "1.0.0",
   "private": true,
-  "homepage": "/",
+  "homepage": "/proekt-db",
   "dependencies": {
     "axios": "^0.24.0",
     "react": "^17.0.2",
