@@ -65,7 +65,12 @@ def update_order_endpoint(order_id: int, order_data: schemas.OrderUpdateRequest,
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token"
         )
+
+    # Попытка обновления заказа
     db_order = update_order(db=db, order_id=order_id, order_data=order_data)
+    if not db_order:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
+
     return {"order_id": db_order.id}
 
 

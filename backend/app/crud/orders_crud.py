@@ -94,7 +94,8 @@ def update_order(db: Session, order_id: int, order_data: schemas.OrderUpdateRequ
         # Получаем существующий заказ
         db_order = db.query(models.Order).filter(models.Order.id == order_id).first()
         if not db_order:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
+            # Если заказ не найден, возвращаем None для обработки в вызывающем коде
+            return None
 
         # Обновляем данные заказа
         db_order.weight = order_data.weight
@@ -102,12 +103,15 @@ def update_order(db: Session, order_id: int, order_data: schemas.OrderUpdateRequ
         db_order.source_location = order_data.source_location
         db_order.destination_location = order_data.destination_location
 
+        # Фиксация изменений и обновление состояния объекта
         db.commit()
         db.refresh(db_order)
+
         logger.info(f"Order {order_id} updated successfully")
         return db_order
+
     except Exception as e:
-        db.rollback()
+        db.rollback()  # Откат транзакции при ошибке
         logger.error(f"An error occurred while updating the order {order_id}. {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
