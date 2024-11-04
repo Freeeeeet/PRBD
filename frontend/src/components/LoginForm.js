@@ -6,15 +6,15 @@ const LoginForm = ({ onLogin }) => {
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await login(email, password);
-      localStorage.setItem('token', response.data.token);
-      onLogin();
-    } catch (error) {
-      alert('Ошибка входа. Проверьте логин и пароль.');
-    }
-  };
+  e.preventDefault();
+  try {
+    const data = await login(email, password); // Получаем уже data, а не response.data
+    localStorage.setItem('token', data.token); // Сохраняем token из data
+    onLogin();
+  } catch (error) {
+    alert('Ошибка входа. Проверьте логин и пароль.');
+  }
+};
 
   return (
     <form onSubmit={handleSubmit}>
