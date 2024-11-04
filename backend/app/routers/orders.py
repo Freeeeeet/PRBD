@@ -22,6 +22,23 @@ def create_order_endpoint(order: schemas.OrderCreateRequest, token: str = Header
     return {"order_id": new_order.id}
 
 
+@router.get("/order_statuses", response_model=schemas.OrderDeliveryStatusesResponse)
+def read_order_statuses_endpoint(token: str = Header(...), db: Session = Depends(get_db)):
+    authed_user = check_auth(db=db, token=token)
+    if not authed_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )
+
+    statuses_response = get_delivery_statuses(db=db)
+    if not statuses_response:
+        raise HTTPException(status_code=404, detail="Order statuses not found")
+    logger.info(f"statuses_response found: {statuses_response}")
+    logger.info(f"read_order_statuses_endpoint: {[status_item for status_item in statuses_response]}")
+    return statuses_response
+
+
 @router.get("/{order_id}", response_model=schemas.OrderInfoResponse)
 def read_order_endpoint(order_id: int, token: str = Header(...), db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
@@ -49,24 +66,3 @@ def change_order_status_endpoint(order_status: schemas.OrderChangeStatusRequest,
 
     change_status(db=db, order_status=order_status)
     return {"success": True}
-
-
-@router.get("/order_statuses", response_model=schemas.OrderDeliveryStatusesResponse)
-def read_order_statuses_endpoint(token: str = Header(...), db: Session = Depends(get_db)):
-    authed_user = check_auth(db=db, token=token)
-    if not authed_user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token"
-        )
-
-    statuses_response = get_delivery_statuses(db=db)
-    if not statuses_response:
-        raise HTTPException(status_code=404, detail="Order statuses not found")
-    logger.info(f"statuses_response found: {statuses_response}")
-    logger.info(f"read_order_statuses_endpoint: {[status_item for status_item in statuses_response]}")
-    return statuses_response
-
-# @router.put("/orders/{order_id}", response_model=OrderResponse)
-# def update_order_endpoint(order_id: int, order_data: OrderCreate, db: Session = Depends(get_db)):
-#     return update_order(db=db, order_id=order_id, order_data=order_data)
