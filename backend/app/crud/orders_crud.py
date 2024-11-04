@@ -55,15 +55,19 @@ def get_order(db: Session, order_id: int):
         if not order_data:
             return None
 
-        # Запрос для получения истории статусов заказа
+        # Создаем алиасы для таблиц
+        DeliveryStatusAlias = aliased(models.DeliveryStatus)
+        ShipmentHistoryAlias = aliased(models.ShipmentHistory)
+
+        # Запрос для получения истории статусов заказа с использованием алиасов
         order_statuses = (
             db.query(
-                models.DeliveryStatus.status_name,
-                models.DeliveryStatus.description,
-                models.ShipmentHistory.created_at
+                DeliveryStatusAlias.status_name,
+                DeliveryStatusAlias.description,
+                ShipmentHistoryAlias.created_at
             )
-            .join(models.ShipmentHistory, models.ShipmentHistory.order_id == order_id)
-            .join(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
+            .join(ShipmentHistoryAlias, ShipmentHistoryAlias.order_id == order_id)
+            .join(DeliveryStatusAlias, DeliveryStatusAlias.id == ShipmentHistoryAlias.status_id)
             .all()
         )
 
