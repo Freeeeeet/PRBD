@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas import OrderCreateRequest, OrderCreateResponse, OrderInfoResponse
-from app.crud.orders_crud import create_order, get_order
+from app.schemas import OrderCreateRequest, OrderCreateResponse, OrderInfoResponse, OrderChangeStatusResponse, \
+    OrderChangeStatusRequest
+from app.crud.orders_crud import create_order, get_order, change_status
 from app.crud.users_crud import check_auth
 from app.config import logger
 router = APIRouter()
@@ -23,7 +24,7 @@ def create_order_endpoint(order: OrderCreateRequest, token: str = Header(...), d
 
 
 @router.get("/{order_id}", response_model=OrderInfoResponse)
-def read_order(order_id: int, token: str = Header(...), db: Session = Depends(get_db)):
+def read_order_endpoint(order_id: int, token: str = Header(...), db: Session = Depends(get_db)):
     authed_user = check_auth(db=db, token=token)
     if not authed_user:
         raise HTTPException(
@@ -35,8 +36,22 @@ def read_order(order_id: int, token: str = Header(...), db: Session = Depends(ge
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
-#
-#
+
+
+@router.post("/change_order_status/", response_model=OrderChangeStatusResponse)
+def change_order_status_endpoint(order_status: OrderChangeStatusRequest, token: str = Header(...),
+                                 db: Session = Depends(get_db)):
+    authed_user = check_auth(db=db, token=token)
+    if not authed_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )
+
+    change_status(db=db, order_status=order_status)
+    return {"success": True}
+
+
 # @router.put("/orders/{order_id}", response_model=OrderResponse)
 # def update_order_endpoint(order_id: int, order_data: OrderCreate, db: Session = Depends(get_db)):
 #     return update_order(db=db, order_id=order_id, order_data=order_data)

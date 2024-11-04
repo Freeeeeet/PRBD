@@ -42,6 +42,7 @@ class Order(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="orders")
+    shipment_history = relationship("ShipmentHistory", back_populates="orders")
 
 class Payment(Base):
     __tablename__ = "payments"
@@ -105,3 +106,5 @@ class ShipmentHistory(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
     status_id = Column(Integer, ForeignKey("delivery_status.id"))
     created_at = Column(DateTime, default=datetime.now())
+
+    orders = relationship("Order", back_populates="shipment_history")

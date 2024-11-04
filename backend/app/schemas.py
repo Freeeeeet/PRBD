@@ -3,9 +3,6 @@ from typing import List, Optional
 from datetime import datetime
 
 
-# class OnlyAuthRequestBody(BaseModel):
-#     token: str
-
 
 class UserCreateRequest(BaseModel):
     name: str = Field(..., pattern=r'^[\w\sа-яА-ЯёЁ-]{1,50}$',
@@ -41,6 +38,14 @@ class LoginUserResponse(BaseModel):
     token: str
 
 
+class OrderStatus(BaseModel):
+    status_name: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class OrderCreateRequest(BaseModel):
     weight: condecimal(gt=0, max_digits=10, decimal_places=2) = Field(...,
                                     description="Weight of the order in kilograms. Must be positive.", examples=[12.5])
@@ -74,7 +79,26 @@ class OrderInfoResponse(BaseModel):
     tracking_number: str
     total_price: float
     created_at: datetime
+    order_statuses: list[OrderStatus] = []
 
     class Config:
         from_attributes = True
+
+
+class OrderChangeStatusRequest(BaseModel):
+    order_id: int
+    status_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class OrderChangeStatusResponse(BaseModel):
+    success: bool
+
+    class Config:
+        from_attributes = True
+
+
+
 
