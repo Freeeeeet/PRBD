@@ -60,31 +60,57 @@ def get_order(db: Session, order_id: int):
 
 def get_all_orders(db: Session, offset: int = 0, limit: int = 10) -> List[schemas.OrderInfoResponse]:
     try:
-        # Получаем заказы с применением offset и limit
-        orders = db.query(models.Order).offset(offset).limit(limit).all()
-
-        # Для каждого заказа загружаем его статусы
-        for order in orders:
-            # Инициализируем поле статусов пустым списком
-            order.order_statuses = []
-
-            # Используем outerjoin, чтобы учитывать заказы без статусов
-            order_statuses = (
-                db.query(
-                    models.DeliveryStatus.status_name,
-                    models.ShipmentHistory.created_at
-                )
-                .outerjoin(models.ShipmentHistory, models.ShipmentHistory.order_id == order.id)  # Используем order.id
-                .outerjoin(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
-                .all()
+        # Основной запрос, загружающий заказы вместе со статусами
+        orders = (
+            db.query(
+                models.Order.id,
+                models.Order.weight,
+                models.Order.source_location,
+                models.Order.destination_location,
+                models.Order.tracking_number,
+                models.Order.total_price,
+                models.Order.created_at,
+                models.DeliveryStatus.status_name,
+                models.ShipmentHistory.created_at.label("status_created_at")
             )
+            .outerjoin(models.ShipmentHistory, models.ShipmentHistory.order_id == models.Order.id)
+            .outerjoin(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
 
-            # Преобразуем статусы в нужный формат, если они существуют
-            order.order_statuses = [
-                schemas.OrderStatus(status_name=status.status_name, created_at=status.created_at)
-                for status in order_statuses if status.status_name is not None
-            ]
-        return orders
+        # Преобразование результатов в нужный формат
+        result = []
+        orders_dict = {}
+
+        for order in orders:
+            order_id = order.id
+            if order_id not in orders_dict:
+                # Создаем основной объект заказа с пустым списком статусов
+                orders_dict[order_id] = schemas.OrderInfoResponse(
+                    id=order.id,
+                    weight=order.weight,
+                    source_location=order.source_location,
+                    destination_location=order.destination_location,
+                    tracking_number=order.tracking_number,
+                    total_price=order.total_price,
+                    created_at=order.created_at,
+                    order_statuses=[]
+                )
+
+            # Добавляем статус к соответствующему заказу
+            if order.status_name:
+                order_status = schemas.OrderStatus(
+                    status_name=order.status_name,
+                    created_at=order.status_created_at
+                )
+                orders_dict[order_id].order_statuses.append(order_status)
+
+        # Преобразование dict значений в список
+        result = list(orders_dict.values())
+        return result
+
     except Exception as e:
         logger.error(f"An error occurred while getting all orders from db {e}", exc_info=True)
         return []
