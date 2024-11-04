@@ -1,11 +1,29 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Header
+from fastapi import APIRouter, Depends, HTTPException, status, Header, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app import schemas
-from app.crud.orders_crud import create_order, get_order, change_status, get_delivery_statuses
+from app.crud.orders_crud import create_order, get_order, change_status, get_delivery_statuses, get_all_orders
 from app.crud.users_crud import check_auth
 from app.config import logger
 router = APIRouter()
+
+
+@router.get("/", response_model=list[schemas.OrderInfoResponse])
+def read_all_orders(
+    token: str = Header(...),
+    db: Session = Depends(get_db),
+    offset: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1, le=100)
+):
+    authed_user = check_auth(db=db, token=token)
+    if not authed_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )
+
+    orders = get_all_orders(db=db, offset=offset, limit=limit)
+    return orders
 
 
 @router.post("/create/", response_model=schemas.OrderCreateResponse)
@@ -35,7 +53,6 @@ def read_order_statuses_endpoint(token: str = Header(...), db: Session = Depends
     if not statuses_response:
         raise HTTPException(status_code=404, detail="Order statuses not found")
     return statuses_response
-
 
 @router.get("/{order_id}", response_model=schemas.OrderInfoResponse)
 def read_order_endpoint(order_id: int, token: str = Header(...), db: Session = Depends(get_db)):

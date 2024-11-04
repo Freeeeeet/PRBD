@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
+from typing import List
 
 from app.config import logger
 from app import models, schemas
@@ -55,6 +56,34 @@ def get_order(db: Session, order_id: int):
     except Exception as e:
         logger.error(f"An error occurred while getting order {order_id} from db {e}", exc_info=True)
         return None
+
+
+def get_all_orders(db: Session, offset: int = 0, limit: int = 10) -> List[schemas.OrderInfoResponse]:
+    try:
+        # Получаем заказы с применением offset и limit
+        orders = db.query(models.Order).offset(offset).limit(limit).all()
+
+        # Для каждого заказа загружаем его статусы
+        for order in orders:
+            order_statuses = (
+                db.query(
+                    models.DeliveryStatus.status_name,
+                    models.ShipmentHistory.created_at
+                )
+                .join(models.ShipmentHistory, models.ShipmentHistory.order_id == models.Order.id)
+                .join(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
+                .filter(models.Order.id == order.id)
+                .all()
+            )
+            # Преобразуем статусы в нужный формат
+            order.order_statuses = [
+                schemas.OrderStatus(status_name=status.status_name, created_at=status.created_at)
+                for status in order_statuses
+            ]
+        return orders
+    except Exception as e:
+        logger.error(f"An error occurred while getting all orders from db {e}", exc_info=True)
+        return []
 
 
 def change_status(db: Session, order_status: schemas.OrderChangeStatusRequest):
