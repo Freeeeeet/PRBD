@@ -2,9 +2,6 @@ import axios from 'axios';
 
 const API_BASE = 'https://prometheussiptelepony.space/proekt-db/api';
 
-//// Функция для входа
-//export const login = (email, password) =>
-//  axios.post(`${API_BASE}/user/login`, { email, password });
 
 // Функция для входа
 export const login = async (email, password) => {
