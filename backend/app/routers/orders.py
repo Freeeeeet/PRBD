@@ -63,7 +63,7 @@ def read_order_statuses_endpoint(token: str = Header(...), db: Session = Depends
     statuses = get_delivery_statuses(db=db)
     if not statuses:
         raise HTTPException(status_code=404, detail="Order statuses not found")
-    return {"statuses": statuses}
+    return statuses
 
 
 # @router.put("/orders/{order_id}", response_model=OrderResponse)
