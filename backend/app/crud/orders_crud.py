@@ -82,7 +82,6 @@ def get_delivery_statuses(db: Session):
         statuses = db.query(models.DeliveryStatus).all()
 
         if statuses:
-            logger.info(f"get_delivery_statuses found: {statuses}")
             statuses = [
                 schemas.OrderDeliveryStatusResponse(
                     id=status_item.id,
@@ -90,7 +89,6 @@ def get_delivery_statuses(db: Session):
                     description=status_item.description
                 ) for status_item in statuses
             ]
-            logger.info(f"get_delivery_statuses: {statuses}")
         return schemas.OrderDeliveryStatusesResponse(statuses=statuses)
     except Exception as e:
         logger.error(f"An error occurred while getting all order delivery statuses from db {e}", exc_info=True)

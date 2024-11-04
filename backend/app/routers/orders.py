@@ -34,8 +34,6 @@ def read_order_statuses_endpoint(token: str = Header(...), db: Session = Depends
     statuses_response = get_delivery_statuses(db=db)
     if not statuses_response:
         raise HTTPException(status_code=404, detail="Order statuses not found")
-    logger.info(f"statuses_response found: {statuses_response}")
-    logger.info(f"read_order_statuses_endpoint: {[status_item for status_item in statuses_response]}")
     return statuses_response
 
 
