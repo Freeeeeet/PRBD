@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import users, orders
 from app.database import engine, Base
 
-app = FastAPI(openapi_prefix="/proekt-db/api")
+app = FastAPI(root_path="/proekt-db/api")
 
 
 # Настройка CORS

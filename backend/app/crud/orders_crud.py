@@ -81,6 +81,7 @@ def get_delivery_statuses(db: Session):
     try:
         statuses = db.query(models.DeliveryStatus).all()
         if statuses:
+            logger.info(f"get_delivery_statuses found: {statuses}")
             statuses = [
                 schemas.OrderDeliveryStatusResponse(
                     id=status_item.id,
