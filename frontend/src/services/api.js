@@ -55,7 +55,7 @@ export const updateOrderStatus = (orderId, statusId) => {
 // Обновление данных заказа
 export const updateOrder = (orderId, updatedData) => {
   const token = localStorage.getItem('token');
-  return axios.put(`${API_BASE}/update/${orderId}`, updatedData, {
+  return axios.put(`${API_BASE}/orders/update/${orderId}`, updatedData, {
     headers: { token },
   });
 };
