@@ -22,6 +22,9 @@ def create_order(db: Session, order: schemas.OrderCreateRequest, user_id: int):
         db.commit()
         db.refresh(db_order)
         logger.info(f"Order {db_order.id} added to database correctly, returning order_id")
+
+        order_status = schemas.OrderChangeStatusRequest(order_id=db_order.id, status_id=1)
+        change_status(db=db, order_status=order_status)
         return db_order
     except Exception as e:
         db.rollback()
