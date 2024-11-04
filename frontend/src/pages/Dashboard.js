@@ -58,8 +58,8 @@ const Dashboard = () => {
       <div className="banner-section">
         <h1 className="slogan">Мы - надёжная логистическая компания для ваших нужд</h1>
         <div className="banner-images">
-          <img src="/images/first_image.jpg" alt="Транспортировка грузов" />
-          <img src="/images/second_image.jpg" alt="Надежные доставки" />
+          <img src="/proekt-db/images/first_image.jpg" alt="Транспортировка грузов" />
+          <img src="/proekt-db/images/second_image.jpg" alt="Надежные доставки" />
         </div>
       </div>
 
