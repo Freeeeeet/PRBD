@@ -13,9 +13,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     const loadOrders = async () => {
-      const token = localStorage.getItem('token');
       try {
-        const response = await fetchAllOrders(token, offset, limit);
+        const response = await fetchAllOrders(offset, limit); // Убираем передачу token
         setOrders(response.data);
       } catch (error) {
         console.error('Ошибка при загрузке заказов:', error);
@@ -42,7 +41,7 @@ const Dashboard = () => {
       setDestination('');
       setPrice('');
       // Обновляем список заказов после создания
-      const response = await fetchAllOrders(localStorage.getItem('token'), offset, limit);
+      const response = await fetchAllOrders(offset, limit); // Убираем передачу token
       setOrders(response.data);
     } catch (error) {
       console.error('Ошибка при создании заказа:', error);
