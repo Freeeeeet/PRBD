@@ -28,8 +28,6 @@ services:
   prbd-frontend:
     build:
       context: ./frontend
-    ports:
-      - "80:80"
     networks:
       - shared_network
 
