@@ -61,6 +61,31 @@ def get_order(db: Session, order_id: int):
         return None
 
 
+def update_order(db: Session, order_id: int, order_data: schemas.OrderUpdateRequest):
+    try:
+        # Получаем существующий заказ
+        db_order = db.query(models.Order).filter(models.Order.id == order_id).first()
+        if not db_order:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
+
+        # Обновляем данные заказа
+        db_order.weight = order_data.weight
+        db_order.total_price = order_data.total_price
+        db_order.source_location = order_data.source_location
+        db_order.destination_location = order_data.destination_location
+
+        db.commit()
+        db.refresh(db_order)
+        logger.info(f"Order {order_id} updated successfully")
+        return db_order
+    except Exception as e:
+        db.rollback()
+        logger.error(f"An error occurred while updating the order {order_id}. {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred while updating the order."
+        )
+
 def get_all_orders(db: Session, offset: int = 0, limit: int = 10) -> List[schemas.OrderInfoResponse]:
     try:
         # Основной запрос, загружающий заказы вместе со статусами

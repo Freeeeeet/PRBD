@@ -27,7 +27,7 @@ const Dashboard = () => {
   const handleChangeOrderStatus = async (orderId, statusId) => {
     try {
       await updateOrderStatus(orderId, statusId);
-      await loadOrders(); // Обновляем список заказов после изменения статуса
+      loadOrders();
     } catch (error) {
       console.error('Ошибка при изменении статуса заказа:', error);
     }
@@ -43,8 +43,8 @@ const Dashboard = () => {
     try {
       await createOrder(orderData);
       alert('Заказ успешно создан');
-      setWeight(''); setSource(''); setDestination(''); setPrice(''); // Сброс полей формы
-      loadOrders(); // Обновляем список заказов
+      setWeight(''); setSource(''); setDestination(''); setPrice('');
+      loadOrders();
     } catch (error) {
       console.error('Ошибка при создании заказа:', error);
       alert('Не удалось создать заказ');
@@ -54,7 +54,7 @@ const Dashboard = () => {
   return (
     <div className="container">
       <h2>Панель управления</h2>
-      <OrderList orders={orders} onStatusChange={handleChangeOrderStatus} />
+      <OrderList orders={orders} onStatusChange={handleChangeOrderStatus} reloadOrders={loadOrders} />
       <div>
         <button onClick={() => setOffset(Math.max(0, offset - limit))} disabled={offset === 0}>Предыдущая страница</button>
         <button onClick={() => setOffset(offset + limit)}>Следующая страница</button>

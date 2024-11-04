@@ -103,6 +103,16 @@ class OrderChangeStatusRequest(BaseModel):
         from_attributes = True
 
 
+class OrderUpdateRequest(BaseModel):
+    weight: float
+    total_price: float
+    source_location: str
+    destination_location: str
+
+    class Config:
+        from_attributes = True
+
+
 class OrderChangeStatusResponse(BaseModel):
     success: bool
 
