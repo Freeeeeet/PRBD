@@ -68,12 +68,13 @@ def get_all_orders(db: Session, offset: int = 0, limit: int = 10) -> List[schema
             # Инициализируем поле статусов пустым списком
             order.order_statuses = []
 
+            # Используем outerjoin, чтобы учитывать заказы без статусов
             order_statuses = (
                 db.query(
                     models.DeliveryStatus.status_name,
                     models.ShipmentHistory.created_at
                 )
-                .outerjoin(models.ShipmentHistory, models.ShipmentHistory.order_id == order.id)  # outerjoin для учета отсутствующих статусов
+                .outerjoin(models.ShipmentHistory, models.ShipmentHistory.order_id == order.id)  # Используем order.id
                 .outerjoin(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
                 .all()
             )
