@@ -65,20 +65,23 @@ def get_all_orders(db: Session, offset: int = 0, limit: int = 10) -> List[schema
 
         # Для каждого заказа загружаем его статусы
         for order in orders:
+            # Инициализируем поле статусов пустым списком
+            order.order_statuses = []
+
             order_statuses = (
                 db.query(
                     models.DeliveryStatus.status_name,
                     models.ShipmentHistory.created_at
                 )
-                .join(models.ShipmentHistory, models.ShipmentHistory.order_id == models.Order.id)
-                .join(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
-                .filter(models.Order.id == order.id)
+                .outerjoin(models.ShipmentHistory, models.ShipmentHistory.order_id == order.id)  # outerjoin для учета отсутствующих статусов
+                .outerjoin(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
                 .all()
             )
-            # Преобразуем статусы в нужный формат
+
+            # Преобразуем статусы в нужный формат, если они существуют
             order.order_statuses = [
                 schemas.OrderStatus(status_name=status.status_name, created_at=status.created_at)
-                for status in order_statuses
+                for status in order_statuses if status.status_name is not None
             ]
         return orders
     except Exception as e:
