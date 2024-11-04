@@ -40,7 +40,7 @@ class LoginUserResponse(BaseModel):
 
 class OrderStatus(BaseModel):
     status_name: str
-    description: str
+    description: Optional[str] = None  # Описание может быть необязательным
     created_at: datetime
 
     class Config:

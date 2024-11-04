@@ -37,25 +37,57 @@ def create_order(db: Session, order: schemas.OrderCreateRequest, user_id: int):
 
 def get_order(db: Session, order_id: int):
     try:
-        order = db.query(
-            models.Order).filter(models.Order.id == order_id).first()
-        if order:
-            # Получение истории статусов заказа
-            order_statuses = (
-                db.query(
-                    models.Order.id,
-                    models.DeliveryStatus.status_name,
-                    models.ShipmentHistory.created_at
-                )
-                .join(models.ShipmentHistory, models.ShipmentHistory.order_id == models.Order.id)
-                .join(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
-                .filter(models.Order.id == order_id)
-                .all()
+        # Основной запрос для получения данных заказа
+        order_data = (
+            db.query(
+                models.Order.id,
+                models.Order.weight,
+                models.Order.source_location,
+                models.Order.destination_location,
+                models.Order.tracking_number,
+                models.Order.total_price,
+                models.Order.created_at
             )
-            # Преобразование статусов в формат, подходящий для ответа
-            order.order_statuses = [schemas.OrderStatus(status_name=status.status_name, created_at=status.created_at) for status
-                                    in order_statuses]
-        return order
+            .filter(models.Order.id == order_id)
+            .first()
+        )
+
+        if not order_data:
+            return None
+
+        # Запрос для получения истории статусов заказа
+        order_statuses = (
+            db.query(
+                models.DeliveryStatus.status_name,
+                models.DeliveryStatus.description,
+                models.ShipmentHistory.created_at
+            )
+            .join(models.ShipmentHistory, models.ShipmentHistory.order_id == order_id)
+            .join(models.DeliveryStatus, models.DeliveryStatus.id == models.ShipmentHistory.status_id)
+            .all()
+        )
+
+        # Преобразуем статусы в нужный формат
+        order_status_list = [
+            schemas.OrderStatus(
+                status_name=status.status_name,
+                description=status.description,
+                created_at=status.created_at
+            )
+            for status in order_statuses
+        ]
+
+        # Создаем и возвращаем объект `OrderInfoResponse`
+        return schemas.OrderInfoResponse(
+            id=order_data.id,
+            weight=order_data.weight,
+            source_location=order_data.source_location,
+            destination_location=order_data.destination_location,
+            tracking_number=order_data.tracking_number,
+            total_price=order_data.total_price,
+            created_at=order_data.created_at,
+            order_statuses=order_status_list
+        )
     except Exception as e:
         logger.error(f"An error occurred while getting order {order_id} from db {e}", exc_info=True)
         return None
