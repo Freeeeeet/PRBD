@@ -71,6 +71,7 @@ def get_all_orders(db: Session, offset: int = 0, limit: int = 10) -> List[schema
                 models.Order.total_price,
                 models.Order.created_at,
                 models.DeliveryStatus.status_name,
+                models.DeliveryStatus.description,
                 models.ShipmentHistory.created_at.label("status_created_at")
             )
             .outerjoin(models.ShipmentHistory, models.ShipmentHistory.order_id == models.Order.id)
@@ -103,6 +104,7 @@ def get_all_orders(db: Session, offset: int = 0, limit: int = 10) -> List[schema
             if order.status_name:
                 order_status = schemas.OrderStatus(
                     status_name=order.status_name,
+                    description=order.description,
                     created_at=order.status_created_at
                 )
                 orders_dict[order_id].order_statuses.append(order_status)

@@ -40,6 +40,7 @@ class LoginUserResponse(BaseModel):
 
 class OrderStatus(BaseModel):
     status_name: str
+    description: str
     created_at: datetime
 
     class Config:
