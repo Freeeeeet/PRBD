@@ -8,7 +8,7 @@ export const login = (email, password) =>
 
 // Функция для получения списка заказов с пагинацией
 export const fetchAllOrders = (token, offset = 0, limit = 10) =>
-  axios.get(`${API_BASE}/orders/all`, {
+  axios.get(`${API_BASE}/orders/`, {
     headers: { Authorization: `Bearer ${token}` },
     params: { offset, limit }
   });
