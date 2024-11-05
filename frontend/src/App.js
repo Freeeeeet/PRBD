@@ -25,7 +25,7 @@ function App() {
           element={
             isAuthenticated
               ? <Dashboard />
-              : <Navigate to="/dashboard" replace />
+              : <Navigate to="/" replace />
           }
         />
       </Routes>
